@@ -33,6 +33,7 @@
 
     <dependencies>
         <dependency>
+
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest</artifactId>
         </dependency>
@@ -56,10 +57,10 @@
             <version>33.4.6-jre</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.12.1</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
