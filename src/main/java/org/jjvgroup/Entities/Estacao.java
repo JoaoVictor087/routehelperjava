@@ -1,9 +1,8 @@
 package org.jjvgroup.Entities;
 
 import com.google.common.base.Objects;
-import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+
 public class Estacao {
     private String nome;
     private double x;

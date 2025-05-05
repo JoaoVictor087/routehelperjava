@@ -1,51 +1,81 @@
 package org.jjvgroup;
 
 import com.google.common.graph.MutableValueGraph;
-import com.google.common.graph.ValueGraphBuilder;
+import dtos.RouteRequest;
+import dtos.RouteResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jjvgroup.DTOs.SetarRotasRequest;
 import org.jjvgroup.Entities.Estacao;
-import org.jjvgroup.Repositories.AEstrelaRepository;
-import org.jjvgroup.Repositories.EstacaoRepository;
-import org.jjvgroup.Repositories.GrafoRepository;
+import org.jjvgroup.Entities.Usuario;
+import org.jjvgroup.Repositories.*;
+import org.jjvgroup.Services.GrafoService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Path("/rotas")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class RouteResource {
 
     @Inject
-    GrafoRepository grafoRepository;
+    UsuarioRepository usuarioRepository;
 
     @Inject
     AEstrelaRepository aEstrelaRepository;
 
     @Inject
+    ConexaoRepository conexaoRepository;
+
+    @Inject
     EstacaoRepository estacaoRepository;
 
+    @Inject
+    NoBuscaRepository noBuscaRepository;
+
+    @Inject
+    GrafoRepository grafoRepository;
+
+    @Inject
+    GrafoService grafoService;
+
     @POST
-    @Path("/setarRotas")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setEstacoes(SetarRotasRequest request) {
-        MutableValueGraph<Estacao, Double> grafo = ValueGraphBuilder.undirected().build();
-        grafoRepository.carregarGrafo(grafo);
+    public Response setEstacoes(RouteRequest rota) {
+        MutableValueGraph<Estacao, Double> grafo = grafoService.getGrafo();
+        Usuario usuario = new Usuario();
 
-        for (Estacao estacao : grafo.nodes()) {
-            if (request.estacaoOrigem.equalsIgnoreCase(estacao.getNome())) {
-                request.usuario.setOrigem(estacao);
+        String estacaoOrigem = rota.estacaoOrigem();
+        for (Estacao estacao:grafo.nodes()){
+            if (estacaoOrigem.equalsIgnoreCase(estacao.getNome())){
+                usuario.setOrigem(estacao);
             }
         }
 
-        for (Estacao estacao : grafo.nodes()) {
-            if (request.estacaoDestino.equalsIgnoreCase(estacao.getNome())) {
-                request.usuario.setDestino(estacao);
+        String estacaoDestino = rota.estacaoDestino();
+        for (Estacao estacao:grafo.nodes()){
+            if (estacaoDestino.equalsIgnoreCase(estacao.getNome())){
+                usuario.setDestino(estacao);
             }
         }
 
-        aEstrelaRepository.calcularRota(request.usuario, grafo, estacaoRepository);
+        List<Estacao> resultado = aEstrelaRepository.calcularRota(usuario, grafo);
 
-        return Response.status(Response.Status.OK).build();
+        if (resultado.isEmpty()){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Rota não encontrada")
+                    .build();
+        }
+        List<String> caminhoEmNomes = resultado.stream()
+                .map(estacao -> estacao.getNome())
+                .toList();
+
+
+        RouteResponse resultadoMapeado = new RouteResponse(caminhoEmNomes);
+        return Response.ok(resultadoMapeado).build();
+
     }
 }

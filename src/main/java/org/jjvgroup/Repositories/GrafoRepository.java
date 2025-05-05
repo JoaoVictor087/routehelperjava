@@ -1,38 +1,24 @@
 package org.jjvgroup.Repositories;
 
 import com.google.common.graph.MutableValueGraph;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jjvgroup.Entities.Conexao;
+import jakarta.inject.Inject;
 import org.jjvgroup.Entities.Estacao;
+import org.jjvgroup.Services.GrafoService;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
 @ApplicationScoped
 public class GrafoRepository {
-    private final MutableValueGraph<Estacao, Double> grafo;
 
-    public GrafoRepository(MutableValueGraph<Estacao, Double> grafo) {
-        this.grafo = grafo;
+    @Inject
+    GrafoService grafoService;
+
+    public GrafoRepository() {
+        System.out.println("construtor executado com sucesso");
     }
 
-    public void adicionarNo(Estacao no) {
-        grafo.addNode(no);
-    }
-
-    public void adicionarAresta(Estacao no1, Estacao no2, double valor) {
-        grafo.putEdgeValue(no1, no2, valor);
-    }
-
-    public Set<Estacao> getConexoes(Estacao no) {
-        return grafo.successors(no);
-    }
 
     public void carregarGrafo(MutableValueGraph<Estacao, Double> grafo) {
         //estacoes

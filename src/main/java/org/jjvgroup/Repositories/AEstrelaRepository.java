@@ -5,12 +5,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.jjvgroup.Entities.Estacao;
 import org.jjvgroup.Entities.NoBusca;
 import org.jjvgroup.Entities.Usuario;
-
 import java.util.*;
+
 @ApplicationScoped
 public class AEstrelaRepository {
 
-    public List<Estacao> calcularRota(Usuario usuario, MutableValueGraph<Estacao, Double> grafo, EstacaoRepository estacaoRepository) {
+    public List<Estacao> calcularRota(Usuario usuario, MutableValueGraph<Estacao, Double> grafo) {
         Estacao inicio = usuario.getOrigem();
         Estacao destino = usuario.getDestino();
 

@@ -6,9 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.jjvgroup.Entities.Estacao;
 import org.jjvgroup.Entities.Usuario;
 
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+
 @ApplicationScoped
 public class UsuarioRepository {
 
