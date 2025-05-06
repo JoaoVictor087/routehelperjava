@@ -1,5 +1,5 @@
 # Stage 1: Build the Quarkus application
-FROM registry.access.redhat.com/ubi9/openjdk-21:1.21 AS builder
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY pom.xml .
 COPY mvnw .
