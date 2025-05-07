@@ -4,11 +4,10 @@ FROM eclipse-temurin:21-jdk-alpine
 # Create and change to the app directory.
 WORKDIR /app
 
-# Copy local code to the container image.
-COPY . ./
-
-# List files to verify mvnw is present
-RUN ls -l
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+COPY src ./src
 
 # Make the Maven wrapper executable
 RUN chmod +x ./mvnw
