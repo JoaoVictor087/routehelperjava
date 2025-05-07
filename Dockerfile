@@ -6,4 +6,11 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY src ./src
 RUN chmod +x ./mvnw
-RUN ./mvnw package -Dnative=false -DskipTests
+RUN ./mvnw package  -DskipTests
+
+# Stage 2: Run the Quarkus application
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=0 /app/target/routehelper-1.0-SNAPSHOT-runner.jar app.jar
+EXPOSE 8080 # Se sua aplicação Quarkus estiver configurada para rodar na porta 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
