@@ -12,5 +12,4 @@ RUN ./mvnw package  -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=0 /app/target/routehelper-1.0-SNAPSHOT-runner.jar app.jar
-EXPOSE 8080 # Se sua aplicação Quarkus estiver configurada para rodar na porta 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
