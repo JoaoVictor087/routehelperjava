@@ -1,5 +1,4 @@
 # Use the Eclipse temurin alpine official image
-# https://hub.docker.com/_/eclipse-temurin
 FROM eclipse-temurin:21-jdk-alpine
 
 # Create and change to the app directory.
@@ -7,6 +6,9 @@ WORKDIR /app
 
 # Copy local code to the container image.
 COPY . ./
+
+# List files to verify mvnw is present
+RUN ls -l
 
 # Make the Maven wrapper executable
 RUN chmod +x ./mvnw
